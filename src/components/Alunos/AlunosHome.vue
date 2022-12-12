@@ -1,10 +1,11 @@
 <template>
-    <section class="alunos">
+    <div class="alunos">
         <section-header 
             TitleView="Alunos"
             :search="true"
             @buscar="buscar"
-            @filtrar="filtrar" />
+            @filtrar="filtrar"
+        />
 
         <div class="main alunos-table">
             <div class="d-flex justify-content-end mb-3">
@@ -12,31 +13,49 @@
             </div>
 
             <div class="tabela-alunos">
-                <tabela
-                    view="alunos"
+                <b-pagination 
+                    align="center"
+                    v-model="currentPage" 
+                    :total-rows="alunos.total" 
+                    :per-page="alunos.per_page" 
+                    aria-controls="userTable"
+                />
+                <skeleton-tabela v-if="alunos.length === 0 || carregar"/>
+                <tabela-aluno v-else
+                    :alunos="alunos"
                     :dadosBusca="busca" 
-                    :filtro="filtro" 
-                    @editarAluno="editarAluno" />
+                    :filtro="filtro"
+                    @editarAluno="editarAluno"
+                    @paginacao="paginacao"
+                />
             </div>
         </div>
-    </section>
+    </div>
 </template>
 
 <script>
     import SectionHeader from '@/components/SectionHeader.vue';
-    import Tabela from '@/components/Tabela.vue';
+    import TabelaAluno from '@/components/Tabelas/TabelaAluno.vue';
+    import SkeletonTabela from '@/components/Admin/Skeleton/SkeletonTabela';
+
     export default {
         components: {
             SectionHeader,
-            Tabela
+            TabelaAluno,
+            SkeletonTabela
         },
         data() {
             return {
+                carregar: false,
                 alunos: [],
                 total: null,
                 busca: '',
                 filtro: '',
+                currentPage: 1
             }
+        },
+        created() {
+            this.getAlunos();
         },
         methods: {
             editarAluno(id) {
@@ -48,6 +67,14 @@
             filtrar(filtro) {
                 this.filtro = filtro;
             }
-        }
+        },
+        watch: {
+            currentPage(newValue, oldValue) {
+                if (newValue !== oldValue) {
+                    this.getAlunos(this.currentPage);
+                    this.carregar = true;
+                }    
+            }
+        },
     }
 </script>

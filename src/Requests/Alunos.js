@@ -4,18 +4,25 @@ import axios from 'axios';
 Vue.mixin({
     methods: {
         // Lista todos os Alunos | Paginação
-        getAlunos() {
+        getAlunos(currentPage = null) {
             this.carregar = true;
+
+            // Tratando a url
+            let url =  this.getAPIUrl() + "/api/v1/alunos";
+            if(currentPage != null) {
+                url += "?page=" + currentPage;
+            }
+
             const options = {
                 method: 'GET',
-                url: this.getAPIUrl() + "/api/v1/alunos",
+                url: url,
                 headers: {
                     Authorization: 'Bearer  ' + this.getToken(),
                 },
             };
             
             axios.request(options).then((response) => {
-                this.items = response.data.data;
+                this.alunos = response.data;
                 this.total = response.data.total;
                 this.carregar = false;
             }).catch((error) => {

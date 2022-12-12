@@ -40,16 +40,19 @@
     import SkeletonTabela from '@/components/Admin/Skeleton/SkeletonTabela.vue';
     import AlertaSimples from '@/components/AlertaSimples.vue';
     export default {
-        components: {
+        components: 
+        {
             SkeletonTabela, AlertaSimples
         },
-        props:{
+        props:
+        {
             view: {Type: String, Default: 'default'},
             opcoes: {Type: Array, Default: []},
             dadosBusca: String,
             filtro: String
         },
-        data() {
+        data() 
+        {
             return {
                 items: [],
                 perPage: 15,
@@ -67,7 +70,8 @@
             }
         },
         created() {
-            switch (this.view) {
+            switch (this.view) 
+            {
                 case 'alunos':
                     this.getAlunos();
                     this.url = this.getAPIUrl() + "/api/v1/alunos?page=";
@@ -76,35 +80,43 @@
             }
         },
         methods: {
-            acaoTabela(id) {
-                switch (this.view) {
+            acaoTabela(id) 
+            {
+                switch (this.view) 
+                {
                     case 'alunos':
                         this.$emit('editarAluno', id);
                         break;
                 }
             },
-            paginacao(currentPage) {
+            paginacao(currentPage) 
+            {
                 this.carregar = true;
-                const options = {
+                const options = 
+                {
                     method: 'GET',
                     url: this.url + currentPage,
                     headers: {Authorization: 'Bearer  ' + this.getToken()}
                 };
 
                 axios.request(options)
-                .then((response) => {
+                .then((response) => 
+                {
                     this.items = response.data.data;
                     this.carregar = false;
                 })
-                .catch((error) => {
+                .catch((error) => 
+                {
                     console.log(error);
                 });
             },
-            busca(filtro, busca) {
+            busca(filtro, busca) 
+            {
                 this.carregar = true;
                 this.alertaAtivo = false;
                 clearTimeout(this.setTimeout);
-                const options = {
+                const options = 
+                {
                     method: 'GET',
                     url: this.urlBusca + filtro + "/" + busca,
                     headers: {Authorization: 'Bearer  ' + this.getToken()}
@@ -133,28 +145,37 @@
             }
         },
         watch: {
-            dadosBusca(newValue, oldValue) {
-                if (newValue == '') {
+            dadosBusca(newValue, oldValue) 
+            {
+                if (newValue == '') 
+                {
                     this.alertaAtivo = false;
-                    switch (this.view) {
+                    switch (this.view) 
+                    {
                         case 'alunos':
                             this.getAlunos();
                             break;
-                        }
-                    } 
+                    }
+                } 
                     
-                if (newValue != oldValue) {
+                if (newValue != oldValue) 
+                {
                     this.busca(this.filtro, newValue);
                 }
             },
-            currentPage(newValue, oldValue) {
-                if(newValue != oldValue) {
+            currentPage(newValue, oldValue) 
+            {
+                if(newValue != oldValue) 
+                {
                     this.paginacao(newValue);
                 }
             },
-            items() {
-                this.items.forEach(element => {
-                    switch (this.view) {
+            items() 
+            {
+                this.items.forEach(element => 
+                {
+                    switch (this.view) 
+                    {
                         case 'alunos':
                             element.documento = this.$options.filters.formataCPF(element.documento);
                             break;

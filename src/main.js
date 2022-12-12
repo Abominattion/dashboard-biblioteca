@@ -6,6 +6,10 @@ import { getToken } from "./services/auth";
 import Url from './Helpers/config'
 import { store } from "./store"
 import axios from 'axios'
+import {
+  userIsLogged
+} from '@/services/auth'
+
 
 import VueTheMask from 'vue-the-mask'
 Vue.use(VueTheMask)
@@ -63,6 +67,9 @@ Vue.mixin({
     },
     getAPIUrl(){
       return Url.apiUrl();
+    },
+    userIsLogged() {
+      return userIsLogged();
     }
   }
 })
